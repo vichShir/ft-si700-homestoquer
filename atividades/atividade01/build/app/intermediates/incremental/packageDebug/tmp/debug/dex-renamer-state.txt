@@ -1,0 +1,4 @@
+#Sat Mar 26 14:57:02 BRT 2022
+base.0=C\:\\Users\\victo\\Desktop\\Projects\\si700_2022_s1-main\\a_object_oriented_programming\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
