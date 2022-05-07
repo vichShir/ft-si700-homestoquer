@@ -4,15 +4,18 @@
 
 ### 📃 Descrição
 
-O objetivo deste repositório é manter as **atividades** realizadas na disciplina e o desenvolvimento de um aplicativo mobile como **trabalho final**, a ser definido ainda, utilizando o framework **Flutter**.
+O objetivo deste repositório é manter as **atividades** realizadas na disciplina e o desenvolvimento de um aplicativo mobile como **trabalho final** utilizando o framework **Flutter**.
 
 ### 📚 Conteúdo
 
-- Atividades
+- **Atividades**
   - Atividade 1 - Linguagem Dart
   - Atividade 2 - Widgets no Flutter
+- **Trabalho (Homestoquer)**
+  - Parte 1 - Interface Gráfica
+
 
 
 ### 🌐 Motivação
 
-As atividades compõem a nota final da disciplina de **SI700 - Programação para Dispositivos Móveis** (1º Semestre 2022) na Faculdade de Tecnologia (FT) UNICAMP.
+As atividades e o trabalho compõem a nota final da disciplina de **SI700 - Programação para Dispositivos Móveis** (1º Semestre 2022) na Faculdade de Tecnologia (FT) UNICAMP.
