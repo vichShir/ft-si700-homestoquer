@@ -1,4 +1,4 @@
-abstract class Item {
+class Item {
   String _descricao = "";
   String _marca = "";
   String _origem = "";
@@ -88,14 +88,26 @@ abstract class Item {
     }
   }
 
-  toMap();
+  toMap() {
+    var map = Map<String, dynamic>();
+    map["descricao"] = _descricao;
+    map["marca"] = _marca;
+    map["origem"] = _origem;
+    map["preco"] = _preco;
+    map["unidade"] = _unidade;
+    map["quantidade"] = _quantidade;
+    map["minQuantidade"] = _minQuantidade;
+    return map;
+  }
 }
 
 class Higiene extends Item {
   // Atributos
   String _funcao = "";
 
-  Higiene(d, m, o, p, u, q, mq, fc) {
+  Higiene() : super();
+
+  Higiene.build(d, m, o, p, u, q, mq, fc) {
     _descricao = d;
     _marca = m;
     _origem = o;
