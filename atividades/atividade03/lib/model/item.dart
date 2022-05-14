@@ -1,71 +1,123 @@
-enum TipoUnitario { naoDefinida, unidade, caixa, par, quilograma, grama, litro, mililitro }
-
 abstract class Item {
-  String _nome = "";
+  String _descricao = "";
   String _marca = "";
-  TipoUnitario _tipoUnitario = TipoUnitario.naoDefinida;
-  double _quantidade = .0;
+  String _origem = "";
+  double _preco = .0;
+  String _unidade = "";
+  int _quantidade = 0;
+  int _minQuantidade = 0;
 
-  // Getter
-  String get descricao {
-    return "$_nome da marca $_marca.";
+  Item() {
+    _descricao = "";
+    _marca = "";
+    _origem = "";
+    _preco = .0;
+    _unidade = "";
+    _quantidade = 0;
+    _minQuantidade = 0;
   }
 
-  String get medida {
-    return _tipoUnitario.toString().split('.').last;
+  Item.withData({descricao = "", marca = "", origem = "", preco = "",
+                unidade = "", quantidade = "", minQuantidade = ""}) {
+    _descricao = descricao;
+    _marca = marca;
+    _origem = origem;
+    _preco = preco;
+    _unidade = unidade;
+    _quantidade = quantidade;
+    _minQuantidade = minQuantidade;
   }
 
-  TipoUnitario get tipoUnitario {
-    return _tipoUnitario;
+  Item.fromMap(map) {
+    _descricao = map["descricao"];
+    _marca = map["marca"];
+    _origem = map["origem"];
+    _preco = map["preco"];
+    _unidade = map["unidade"];
+    _quantidade = map["quantidade"];
+    _minQuantidade = map["minQuantidade"];
   }
 
-  double get quantidade {
-    return _quantidade;
+  String get descricao => _descricao;
+  String get marca => _marca;
+  String get origem => _origem;
+  double get preco => _preco;
+  String get unidade => _unidade;
+  int get quantidade => _quantidade;
+  int get minQuantidade => _minQuantidade;
+
+  set descricao(String newDescricao) {
+    if (newDescricao.isNotEmpty) {
+      _descricao = newDescricao;
+    }
   }
 
-  // Setter
-  set nome(n) {
-    _nome = n;
+  set marca(String newMarca) {
+    if (newMarca.isNotEmpty) {
+      _marca = newMarca;
+    }
   }
 
-  set marca(m) {
-    _marca = m;
+  set origem(String newOrigem) {
+    if (newOrigem.isNotEmpty) {
+      _origem = newOrigem;
+    }
   }
 
-  set tipoUnitario(tu) {
-    _tipoUnitario = tu;
+  set preco(double newMarca) {
+    if (!newMarca.isNaN) {
+      _preco = newMarca;
+    }
   }
 
-  set quantidade(q) {
-    _quantidade = q.toDouble();
+  set unidade(String newUnidade) {
+    if (newUnidade.isNotEmpty) {
+      _unidade = newUnidade;
+    }
   }
 
-  displayInfo();
-
-  displayName() {
-    return "Nome: $_nome";
+  set quantidade(int newMarca) {
+    if (!newMarca.isNaN) {
+      _quantidade = newMarca;
+    }
   }
+
+  set minQuantidade(int newMarca) {
+    if (!newMarca.isNaN) {
+      _minQuantidade = newMarca;
+    }
+  }
+
+  toMap();
 }
 
 class Higiene extends Item {
   // Atributos
   String _funcao = "";
 
-  Higiene(n, m, tu, q, fc) {
-    _nome = n;
+  Higiene(d, m, o, p, u, q, mq, fc) {
+    _descricao = d;
     _marca = m;
-    _tipoUnitario = tu;
-    quantidade = q;
+    _origem = o;
+    _preco = p;
+    _unidade = u;
+    _quantidade = q;
+    _minQuantidade = mq;
     _funcao = fc;
   }
 
   @override
-  displayInfo() {
-    return descricao + """\n
-    Quantidade disponível: $_quantidade;
-    Unidade de medida: $medida;
-    Aplicação: $_funcao;
-    """;
+  toMap() {
+    var map = Map<String, dynamic>();
+    map["descricao"] = _descricao;
+    map["marca"] = _marca;
+    map["origem"] = _origem;
+    map["preco"] = _preco;
+    map["unidade"] = _unidade;
+    map["quantidade"] = _quantidade;
+    map["minQuantidade"] = _minQuantidade;
+    map['funcao'] = _funcao;
+    return map;
   }
 }
 
@@ -75,33 +127,33 @@ class Vestuario extends Item {
   String _cor = "";
   bool _importado = false;
 
-  Vestuario(n, m, tu, q, t, c, i) {
-    _nome = n;
+  Vestuario(d, m, o, p, u, q, mq, t, c, i) {
+    _descricao = d;
     _marca = m;
-    _tipoUnitario = tu;
-    quantidade = q;
+    _origem = o;
+    _preco = p;
+    _unidade = u;
+    _quantidade = q;
+    _minQuantidade = mq;
     _tecido = t;
     _cor = c;
     _importado = i;
-
-    // Exception
-    if(tu == TipoUnitario.naoDefinida) {
-      throw const FormatException("Informe uma medida.");
-    }
-    else if (tu == TipoUnitario.litro || tu == TipoUnitario.mililitro) {
-      throw Exception("Medida inválida para vestuário.");
-    }
   }
 
   @override
-  displayInfo() {
-    return descricao + """\n
-    Quantidade disponível: $_quantidade;
-    Unidade de medida: $medida;
-    Tecido: $_tecido;
-    Cor: $_cor;
-    Importado: $_importado.
-    """;
+  toMap() {
+    var map = Map<String, dynamic>();
+    map["descricao"] = _descricao;
+    map["marca"] = _marca;
+    map["origem"] = _origem;
+    map["preco"] = _preco;
+    map["unidade"] = _unidade;
+    map["quantidade"] = _quantidade;
+    map["minQuantidade"] = _minQuantidade;
+    map['tecido'] = _tecido;
+    map['cor'] = _cor;
+    map['importado'] = _importado;
+    return map;
   }
 }
 
@@ -110,26 +162,30 @@ class Cozinha extends Item {
   DateTime _vencimento = DateTime.now().add(const Duration(days: 7));
   bool _precisaRefrigeracao = false;
 
-  Cozinha(n, m, tu, q, vt, rf) {
-    _nome = n;
+  Cozinha(d, m, o, p, u, q, mq, vt, rf) {
+    _descricao = d;
     _marca = m;
-    _tipoUnitario = tu;
-    quantidade = q;
+    _origem = o;
+    _preco = p;
+    _unidade = u;
+    _quantidade = q;
+    _minQuantidade = mq;
     _vencimento = vt;
     _precisaRefrigeracao = rf;
   }
 
   @override
-  displayInfo() {
-    int vencimentoDia = _vencimento.day;
-    int vencimentoMes = _vencimento.month;
-    int vencimentoAno = _vencimento.year;
-
-    return descricao + """\n
-    Quantidade disponível: $_quantidade;
-    Unidade de medida: $medida;
-    Data de vencimento: $vencimentoDia/$vencimentoMes de $vencimentoAno;
-    Colocar na geladeira: $_precisaRefrigeracao.
-    """;
+  toMap() {
+    var map = Map<String, dynamic>();
+    map["descricao"] = _descricao;
+    map["marca"] = _marca;
+    map["origem"] = _origem;
+    map["preco"] = _preco;
+    map["unidade"] = _unidade;
+    map["quantidade"] = _quantidade;
+    map["minQuantidade"] = _minQuantidade;
+    map['vencimento'] = _vencimento;
+    map['precisaRefrigeracao'] = _precisaRefrigeracao;
+    return map;
   }
 }
