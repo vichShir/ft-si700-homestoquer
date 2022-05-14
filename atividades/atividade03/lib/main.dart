@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:si700_estoque/view/first_screen.dart';
 import 'package:si700_estoque/view/second_screen.dart';
 import 'package:si700_estoque/view/third_screen.dart';
+
+import 'bloc/manage_bloc.dart';
+import 'bloc/monitor_bloc.dart';
 
 /// Nome: Victor Yukio Shirasuna
 /// RA: 245155
@@ -62,14 +67,20 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() => _currentScreen = novoItem); 
         },
       ),
-      body: IndexedStack(
-        index: _currentScreen,
-        children: const [
-            Home(),
-            Search(),
-            Register(),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => ManageBloc()),
+          BlocProvider(create: (_) => MonitorBloc()),
         ],
-      ),
+        child: IndexedStack(
+          index: _currentScreen,
+          children: [
+              Home(),
+              Search(),
+              Register(),
+          ],
+        ),
+      )
     );
   }
 }

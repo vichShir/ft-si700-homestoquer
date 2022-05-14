@@ -1,29 +1,30 @@
+import 'package:si700_estoque/bloc/manage_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/manage_event.dart';
+import '../bloc/manage_state.dart';
 import '../model/item.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class Register extends StatelessWidget {
+  Register({Key? key}) : super(key: key);
 
-  @override
-  State<Register> createState() => _Register();
-}
-
-class _Register extends State<Register> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _checkboxCozinha = false;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  /*bool _checkboxCozinha = false;
   bool _checkboxVestuario = false;
   int _myRadio = -1;
   String dropdownValue = 'Unidade';
-  List<String> tiposUnitarios = ["Unidade", "Quilograma", "Grama", "Litro", "Mililitro", "Caixa"];
+  List<String> tiposUnitarios = ["Unidade", "Quilograma", "Grama", "Litro", "Mililitro", "Caixa"];*/
 
-  bool painelHigiene = false;
+  /*bool painelHigiene = false;
   bool painelCozinha = false;
   bool painelVestuario = false;
 
-  DateTime _dataVencimento = DateTime.now().add(const Duration(days: 7));
+  DateTime _dataVencimento = DateTime.now().add(const Duration(days: 7));*/
 
-  void showPainelHigiene(){
+  final Item item = Item();
+
+  /*void showPainelHigiene(){
     painelHigiene = true;
     painelCozinha = false;
     painelVestuario = false;
@@ -39,33 +40,41 @@ class _Register extends State<Register> {
     painelHigiene = false;
     painelCozinha = false;
     painelVestuario = true;
-  }
+  }*/
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  chooseItem(),
-                  const Divider(thickness: 1),
-                  itemFields(),
-                  higieneFields(),
-                  cozinhaFields(),
-                  vestuarioFields(),
-                  formButton(),
-                ],
+    return BlocBuilder<ManageBloc, ManageState>(builder: (context, state) {
+      Item note;
+      if (state is UpdateState) {
+        note = state.previousNote;
+      } else {
+        note = Item();
+      }
+      return Scaffold(
+        body: ListView(
+          children: <Widget>[
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    chooseItem(),
+                    const Divider(thickness: 1),
+                    itemFields(),
+                    //higieneFields(),
+                    //cozinhaFields(),
+                    //vestuarioFields(),
+                    submitButton(note, context, state),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget chooseItem() {
@@ -79,7 +88,7 @@ class _Register extends State<Register> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Row(
+        /*Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -132,7 +141,7 @@ class _Register extends State<Register> {
               ],
             ),
           ],
-        ),
+        ),*/
       ]
     );
   }
@@ -146,7 +155,6 @@ class _Register extends State<Register> {
             hintText: "Suco de Laranja 1,35LT",
             labelText: "Descrição",
           ),
-          onSaved: (String? value) {},
           validator: (String? value) {
             if (value != null) {
               if (value.isEmpty) {
@@ -158,6 +166,9 @@ class _Register extends State<Register> {
               return "Algo errado ocorreu";
             }
           },
+          onSaved: (value) {
+            item.descricao = value!;
+          },
         ),
         TextFormField(
           decoration: const InputDecoration(
@@ -165,7 +176,6 @@ class _Register extends State<Register> {
             hintText: "Neat",
             labelText: "Marca",
           ),
-          onSaved: (String? value) {},
           validator: (String? value) {
             if (value != null) {
               if (value.isEmpty) {
@@ -177,6 +187,9 @@ class _Register extends State<Register> {
               return "Algo errado ocorreu";
             }
           },
+          onSaved: (value) {
+            item.marca = value!;
+          },
         ),
         TextFormField(
           decoration: const InputDecoration(
@@ -184,7 +197,6 @@ class _Register extends State<Register> {
             hintText: "Supermercado Enxuto",
             labelText: "Origem",
           ),
-          onSaved: (String? value) {},
           validator: (String? value) {
             if (value != null) {
               if (value.isEmpty) {
@@ -196,6 +208,9 @@ class _Register extends State<Register> {
               return "Algo errado ocorreu";
             }
           },
+          onSaved: (value) {
+            item.origem = value!;
+          },
         ),
         TextFormField(
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -204,7 +219,6 @@ class _Register extends State<Register> {
             hintText: "1.99",
             labelText: "Preço",
           ),
-          onSaved: (String? value) {},
           validator: (String? value) {
             if (value != null) {
               if (value.isEmpty) {
@@ -216,8 +230,32 @@ class _Register extends State<Register> {
               return "Algo errado ocorreu";
             }
           },
+          onSaved: (value) {
+            item.preco = double.parse(value!);
+          },
         ),
-        Row(
+        TextFormField(
+          decoration: const InputDecoration(
+            icon: Icon(Icons.attach_money),
+            hintText: "UN",
+            labelText: "Unidade",
+          ),
+          validator: (String? value) {
+            if (value != null) {
+              if (value.isEmpty) {
+                return "Preencha a unidade do item";
+              } else {
+                return null;
+              }
+            } else {
+              return "Algo errado ocorreu";
+            }
+          },
+          onSaved: (value) {
+            item.unidade = value!;
+          },
+        ),
+        /*Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             const Icon(
@@ -252,7 +290,7 @@ class _Register extends State<Register> {
               ),
             ),
           ],
-        ),
+        ),*/
         TextFormField(
           keyboardType: const TextInputType.numberWithOptions(decimal: false),
           decoration: const InputDecoration(
@@ -260,7 +298,6 @@ class _Register extends State<Register> {
             hintText: "1",
             labelText: "Quantidade",
           ),
-          onSaved: (String? value) {},
           validator: (String? value) {
             if (value != null) {
               if (value.isEmpty) {
@@ -272,6 +309,9 @@ class _Register extends State<Register> {
               return "Algo errado ocorreu";
             }
           },
+          onSaved: (value) {
+            item.quantidade = int.parse(value!);
+          },
         ),
         TextFormField(
           keyboardType: const TextInputType.numberWithOptions(decimal: false),
@@ -280,7 +320,6 @@ class _Register extends State<Register> {
             hintText: "1",
             labelText: "Sempre manter",
           ),
-          onSaved: (String? value) {},
           validator: (String? value) {
             if (value != null) {
               if (value.isEmpty) {
@@ -292,12 +331,15 @@ class _Register extends State<Register> {
               return "Algo errado ocorreu";
             }
           },
+          onSaved: (value) {
+            item.minQuantidade = int.parse(value!);
+          },
         ),
       ],
     );
   }
 
-  Widget higieneFields() {
+  /*Widget higieneFields() {
     return Column(
       children: <Widget>[
         Visibility(
@@ -457,9 +499,9 @@ class _Register extends State<Register> {
         ),
       ]
     );
-  }
+  }*/
 
-  Widget formButton() {
+  Widget submitButton(Item note, BuildContext context, ManageState state) {
     return SizedBox(
       height: 80,
       width: 220,
@@ -488,9 +530,11 @@ class _Register extends State<Register> {
           ),
           child: const Text("Registrar"),
           onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              
+            if (formKey.currentState!.validate()) {
+              formKey.currentState!.save();
+              BlocProvider.of<ManageBloc>(context).add(SubmitEvent(note: item));
+              formKey.currentState!.reset();
+
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 backgroundColor: Colors.green,
                 duration: const Duration(seconds: 3),

@@ -1,11 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/manage_bloc.dart';
+import '../bloc/manage_event.dart';
+
+import 'package:si700_estoque/model/itens.dart';
+import 'package:si700_estoque/model/item.dart';
+
+import '../bloc/monitor_bloc.dart';
+import '../bloc/monitor_state.dart';
 
 class Search extends StatelessWidget {
-  const Search({Key? key}) : super(key: key);
+  Search({Key? key}) : super(key: key);
+
+  final List colors = [
+    Colors.orange,
+    Colors.red,
+    Colors.yellow
+  ];
+  final List icons = [
+    Icons.ac_unit_outlined,
+    Icons.access_alarm_rounded
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocBuilder<MonitorBloc, MonitorState>(
+      builder: (context, state) => getNoteListView(state.noteCollection),
+    );
+    /*Scaffold(
       body: Center(
         child: SizedBox.expand(
           child: ListView(
@@ -13,7 +36,27 @@ class Search extends StatelessWidget {
           ),
         ),
       ),
-    );
+    );*/
+  }
+
+  ListView getNoteListView(ItemCollection noteCollection) {
+    return ListView.builder(
+        itemCount: noteCollection.length(),
+        itemBuilder: (context, position) => ListTile(
+              onTap: () {
+                BlocProvider.of<ManageBloc>(context).add(UpdateRequest(noteId: noteCollection.getIdAtIndex(position), previousNote: noteCollection.getNodeAtIndex(position)));
+              },
+              leading: Icon(icons[position % icons.length]),
+              trailing: GestureDetector(
+                  onTap: () {
+                    BlocProvider.of<ManageBloc>(context).add(DeleteEvent(noteId: noteCollection.getIdAtIndex(position)));
+
+                    // BlocProvider.of<MonitorBloc>(context).add(AskNewList());
+                  },
+                  child: const Icon(Icons.delete)),
+              title: Text(noteCollection.getNodeAtIndex(position).descricao),
+              subtitle: Text(noteCollection.getNodeAtIndex(position).marca),
+            ));
   }
 
   List<Widget> itens(BuildContext context) {
