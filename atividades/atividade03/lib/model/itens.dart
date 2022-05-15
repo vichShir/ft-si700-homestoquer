@@ -2,19 +2,19 @@ import 'item.dart';
 
 class ItemCollection {
   List<String> idList = [];
-  List<Item> noteList = [];
+  List<Item> itemList = [];
 
   ItemCollection() {
     idList = [];
-    noteList = [];
+    itemList = [];
   }
 
   int length() {
     return idList.length;
   }
 
-  Item getNodeAtIndex(int index) {
-    return noteList[index];
+  Item getItemAtIndex(int index) {
+    return itemList[index];
   }
 
   String getIdAtIndex(int index) {
@@ -30,33 +30,33 @@ class ItemCollection {
     return -1;
   }
 
-  updateOrInsertNoteOfId(String id, Item note) {
+  updateOrInsertItemOfId(String id, Item item) {
     int index = getIndexOfId(id);
     if (index != -1) {
-      noteList[index] = note;
+      itemList[index] = item;
     } else {
       idList.add(id);
-      noteList.add(note);
+      itemList.add(item);
     }
   }
 
-  updateNoteOfId(String id, Item note) {
+  updateItemOfId(String id, Item item) {
     int index = getIndexOfId(id);
     if (index != -1) {
-      noteList[index] = note;
+      itemList[index] = item;
     }
   }
 
-  deleteNoteOfId(String id) {
+  deleteItemOfId(String id) {
     int index = getIndexOfId(id);
     if (index != -1) {
-      noteList.removeAt(index);
+      itemList.removeAt(index);
       idList.removeAt(index);
     }
   }
 
-  insertNoteOfId(String id, Item note) {
+  insertItemOfId(String id, Item item) {
     idList.add(id);
-    noteList.add(note);
+    itemList.add(item);
   }
 }

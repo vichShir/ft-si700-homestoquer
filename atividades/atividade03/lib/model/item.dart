@@ -107,15 +107,15 @@ class Higiene extends Item {
 
   Higiene() : super();
 
-  Higiene.build(d, m, o, p, u, q, mq, fc) {
-    _descricao = d;
-    _marca = m;
-    _origem = o;
-    _preco = p;
-    _unidade = u;
-    _quantidade = q;
-    _minQuantidade = mq;
-    _funcao = fc;
+  Higiene.fromMap(map) {
+    _descricao = map["descricao"];
+    _marca = map["marca"];
+    _origem = map["origem"];
+    _preco = map["preco"];
+    _unidade = map["unidade"];
+    _quantidade = map["quantidade"];
+    _minQuantidade = map["minQuantidade"];
+    _funcao = map["funcao"];
   }
 
   @override
@@ -139,17 +139,19 @@ class Vestuario extends Item {
   String _cor = "";
   bool _importado = false;
 
-  Vestuario(d, m, o, p, u, q, mq, t, c, i) {
-    _descricao = d;
-    _marca = m;
-    _origem = o;
-    _preco = p;
-    _unidade = u;
-    _quantidade = q;
-    _minQuantidade = mq;
-    _tecido = t;
-    _cor = c;
-    _importado = i;
+  Vestuario() : super();
+
+  Vestuario.fromMap(map) {
+    _descricao = map["descricao"];
+    _marca = map["marca"];
+    _origem = map["origem"];
+    _preco = map["preco"];
+    _unidade = map["unidade"];
+    _quantidade = map["quantidade"];
+    _minQuantidade = map["minQuantidade"];
+    _tecido = map["tecido"];
+    _cor = map["cor"];
+    _importado = map["importado"];
   }
 
   @override
@@ -174,16 +176,18 @@ class Cozinha extends Item {
   DateTime _vencimento = DateTime.now().add(const Duration(days: 7));
   bool _precisaRefrigeracao = false;
 
-  Cozinha(d, m, o, p, u, q, mq, vt, rf) {
-    _descricao = d;
-    _marca = m;
-    _origem = o;
-    _preco = p;
-    _unidade = u;
-    _quantidade = q;
-    _minQuantidade = mq;
-    _vencimento = vt;
-    _precisaRefrigeracao = rf;
+  Cozinha() : super();
+
+  Cozinha.fromMap(map) {
+    _descricao = map["descricao"];
+    _marca = map["marca"];
+    _origem = map["origem"];
+    _preco = map["preco"];
+    _unidade = map["unidade"];
+    _quantidade = map["quantidade"];
+    _minQuantidade = map["minQuantidade"];
+    _vencimento = map["vencimento"];
+    _precisaRefrigeracao = map["precisaRefrigeracao"];
   }
 
   @override
