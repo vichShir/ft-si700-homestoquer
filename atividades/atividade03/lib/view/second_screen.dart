@@ -14,19 +14,20 @@ class Search extends StatelessWidget {
   Search({Key? key}) : super(key: key);
 
   final List colors = [
-    Colors.orange,
-    Colors.red,
-    Colors.yellow
+    const Color(0xFF5530DB),
+    const Color(0xFFDB6604),
+    const Color(0xFF1ADB21)
   ];
   final List icons = [
-    Icons.ac_unit_outlined,
-    Icons.access_alarm_rounded
+    Icons.bathtub,
+    Icons.kitchen,
+    Icons.umbrella
   ];
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MonitorBloc, MonitorState>(
-      builder: (context, state) => getNoteListView(state.noteCollection),
+      builder: (context, state) => getNoteListView(state.itemCollection),
     );
     /*Scaffold(
       body: Center(
@@ -39,24 +40,34 @@ class Search extends StatelessWidget {
     );*/
   }
 
-  ListView getNoteListView(ItemCollection noteCollection) {
+  ListView getNoteListView(ItemCollection itemCollection) {
     return ListView.builder(
-        itemCount: noteCollection.length(),
-        itemBuilder: (context, position) => ListTile(
-              onTap: () {
-                BlocProvider.of<ManageBloc>(context).add(UpdateRequest(noteId: noteCollection.getIdAtIndex(position), previousNote: noteCollection.getNodeAtIndex(position)));
-              },
-              leading: Icon(icons[position % icons.length]),
-              trailing: GestureDetector(
-                  onTap: () {
-                    BlocProvider.of<ManageBloc>(context).add(DeleteEvent(noteId: noteCollection.getIdAtIndex(position)));
-
-                    // BlocProvider.of<MonitorBloc>(context).add(AskNewList());
-                  },
-                  child: const Icon(Icons.delete)),
-              title: Text(noteCollection.getNodeAtIndex(position).descricao),
-              subtitle: Text(noteCollection.getNodeAtIndex(position).marca),
-            ));
+      itemCount: itemCollection.length(),
+      itemBuilder: (context, position) {
+        var currentItem = itemCollection.getItemAtIndex(position);
+        var itemId = itemCollection.getIdAtIndex(position);
+        String itemQuantidade = currentItem.quantidade.toString();
+        String itemUnidade = currentItem.unidade;
+        String itemMinQuantidade = currentItem.minQuantidade.toString();
+        String itemPreco = currentItem.preco.toString();
+        String itemOrigem = currentItem.origem;
+        return ListTile(
+          onTap: () {
+            BlocProvider.of<ManageBloc>(context).add(UpdateRequest(itemId: itemId, previousItem: currentItem));
+          },
+          leading: Icon(icons[itemCollection.getIndexOfIcon(position)], color: colors[itemCollection.getIndexOfIcon(position)]),
+          trailing: GestureDetector(
+            onTap: () {
+              BlocProvider.of<ManageBloc>(context).add(DeleteEvent(itemId: itemId));
+              // BlocProvider.of<MonitorBloc>(context).add(AskNewList());
+            },
+            child: const Icon(Icons.delete)
+          ),
+          title: Text(currentItem.descricao + " - " + currentItem.marca),
+          subtitle: Text("$itemQuantidade/$itemMinQuantidade $itemUnidade\nR\$$itemPreco • $itemOrigem"),
+        );
+      }
+    );
   }
 
   List<Widget> itens(BuildContext context) {

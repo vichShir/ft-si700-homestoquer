@@ -7,6 +7,7 @@ import 'package:si700_estoque/view/third_screen.dart';
 
 import 'bloc/manage_bloc.dart';
 import 'bloc/monitor_bloc.dart';
+import 'bloc/form_bloc.dart';
 
 /// Nome: Victor Yukio Shirasuna
 /// RA: 245155
@@ -71,6 +72,9 @@ class _MyHomePageState extends State<MyHomePage> {
         providers: [
           BlocProvider(create: (_) => ManageBloc()),
           BlocProvider(create: (_) => MonitorBloc()),
+          BlocProvider(create: (_) => RadioBloc()),
+          BlocProvider(create: (_) => CheckBoxBloc()),
+          BlocProvider(create: (_) => DateBloc()),
         ],
         child: IndexedStack(
           index: _currentScreen,

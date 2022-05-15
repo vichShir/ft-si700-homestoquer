@@ -6,12 +6,12 @@ import 'monitor_event.dart';
 import 'monitor_state.dart';
 
 class MonitorBloc extends Bloc<MonitorEvent, MonitorState> {
-  ItemCollection noteCollection = ItemCollection();
+  ItemCollection itemCollection = ItemCollection();
 
-  MonitorBloc() : super(MonitorState(noteCollection: ItemCollection())) {
+  MonitorBloc() : super(MonitorState(itemCollection: ItemCollection())) {
     on<AskNewList>((event, emit) async {
-      noteCollection = await RestServer.helper.getNoteList();
-      emit(MonitorState(noteCollection: noteCollection));
+      itemCollection = await RestServer.helper.getItemList();
+      emit(MonitorState(itemCollection: itemCollection));
     });
 
     add(AskNewList());

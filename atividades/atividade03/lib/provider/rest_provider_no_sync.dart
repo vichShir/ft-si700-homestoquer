@@ -16,40 +16,51 @@ class RestServer {
   String prefixUrl = "https://si7001s2022-b1472-default-rtdb.firebaseio.com";
   String suffixUrl = "/.json";
 
-  Future<Item> getItem(noteId) async {
-    Response response = await _dio.get(prefixUrl + noteId + suffixUrl);
-    return Item.fromMap(response.data);
+  Future<Item> getItem(itemId) async {
+    Response response = await _dio.get(prefixUrl + itemId + suffixUrl);
+    //return Item.fromMap(response.data);
+    return Higiene();
   }
 
-  Future<void> insertNote(Item note) async {
+  Future<void> insertItem(Item item) async {
     Response response = await _dio.post(
       prefixUrl + suffixUrl,
-      data: note.toMap(),
+      data: item.toMap(),
     );
     //return 42;
   }
 
-  Future<int> updateNote(noteId, Item note) async {
+  Future<int> updateItem(itemId, Item item) async {
     Response response = await _dio.put(
-      prefixUrl + "/" + noteId + suffixUrl,
-      data: note.toMap(),
+      prefixUrl + "/" + itemId + suffixUrl,
+      data: item.toMap(),
     );
     return 42;
   }
 
-  Future<int> deleteNote(noteId) async {
-    Response response = await _dio.delete(prefixUrl + "/" + noteId + suffixUrl);
+  Future<int> deleteItem(itemId) async {
+    Response response = await _dio.delete(prefixUrl + "/" + itemId + suffixUrl);
     return 42;
   }
 
-  Future<ItemCollection> getNoteList() async {
+  Future<ItemCollection> getItemList() async {
     Response response = await _dio.get(prefixUrl + suffixUrl);
-    ItemCollection noteCollection = ItemCollection();
+    ItemCollection itemCollection = ItemCollection();
 
     response.data.forEach((key, value) {
-      Item note = Item.fromMap(value);
-      noteCollection.insertNoteOfId(key, note);
+      if(value.containsKey("funcao")) {
+        Higiene higiene = Higiene.fromMap(value);
+        itemCollection.insertItemOfId(key, higiene);
+      }
+      else if(value.containsKey("vencimento")) {
+        Cozinha cozinha = Cozinha.fromMap(value);
+        itemCollection.insertItemOfId(key, cozinha);
+      }
+      else if(value.containsKey("tecido")) {
+        Vestuario vestuario = Vestuario.fromMap(value);
+        itemCollection.insertItemOfId(key, vestuario);
+      }
     });
-    return noteCollection;
+    return itemCollection;
   }
 }

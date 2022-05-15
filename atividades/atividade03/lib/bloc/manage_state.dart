@@ -5,7 +5,7 @@ abstract class ManageState {}
 class InsertState extends ManageState {}
 
 class UpdateState extends ManageState {
-  String noteId;
-  Item previousNote;
-  UpdateState({required this.noteId, required this.previousNote});
+  String itemId;
+  Item previousItem;
+  UpdateState({required this.itemId, required this.previousItem});
 }

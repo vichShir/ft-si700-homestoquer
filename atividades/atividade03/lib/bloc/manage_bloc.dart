@@ -7,7 +7,7 @@ import 'manage_state.dart';
 class ManageBloc extends Bloc<ManageEvent, ManageState> {
   ManageBloc() : super(InsertState()) {
     on<UpdateRequest>((event, emit) {
-      emit(UpdateState(noteId: event.noteId, previousNote: event.previousNote));
+      emit(UpdateState(itemId: event.itemId, previousItem: event.previousItem));
     });
 
     on<UpdateCancel>((event, emit) {
@@ -17,16 +17,16 @@ class ManageBloc extends Bloc<ManageEvent, ManageState> {
     on<SubmitEvent>((event, emit) {
       if (state is InsertState) {
         //ToDo: Inserir uma chamada de insert
-        RestServer.helper.insertNote(event.note);
+        RestServer.helper.insertItem(event.item);
       } else if (state is UpdateState) {
         //ToDo: Inserir uma chamada de Update
-        RestServer.helper.updateNote((state as UpdateState).noteId, event.note);
+        RestServer.helper.updateItem((state as UpdateState).itemId, event.item);
       }
     });
     on<DeleteEvent>((event, emit) {
       // ToDo: Inserir uma chamada de Delete
 
-      RestServer.helper.deleteNote(event.noteId);
+      RestServer.helper.deleteItem(event.itemId);
     });
   }
 }

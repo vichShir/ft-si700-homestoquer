@@ -4,52 +4,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/manage_event.dart';
 import '../bloc/manage_state.dart';
+import '../bloc/form_bloc.dart';
 import '../model/item.dart';
 
 class Register extends StatelessWidget {
   Register({Key? key}) : super(key: key);
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  /*bool _checkboxCozinha = false;
-  bool _checkboxVestuario = false;
-  int _myRadio = -1;
-  String dropdownValue = 'Unidade';
-  List<String> tiposUnitarios = ["Unidade", "Quilograma", "Grama", "Litro", "Mililitro", "Caixa"];*/
 
-  /*bool painelHigiene = false;
-  bool painelCozinha = false;
-  bool painelVestuario = false;
-
-  DateTime _dataVencimento = DateTime.now().add(const Duration(days: 7));*/
-
-  final Item item = Item();
-
-  /*void showPainelHigiene(){
-    painelHigiene = true;
-    painelCozinha = false;
-    painelVestuario = false;
-  }
-
-  void showPainelCozinha(){
-    painelHigiene = false;
-    painelCozinha = true;
-    painelVestuario = false;
-  }
-
-  void showPainelVestuario(){
-    painelHigiene = false;
-    painelCozinha = false;
-    painelVestuario = true;
-  }*/
+  final Higiene higiene = Higiene();
+  final Cozinha cozinha = Cozinha();
+  final Vestuario vestuario = Vestuario();
   
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ManageBloc, ManageState>(builder: (context, state) {
-      Item note;
+      Item item;
       if (state is UpdateState) {
-        note = state.previousNote;
+        item = state.previousItem;
       } else {
-        note = Item();
+        item = Higiene();
       }
       return Scaffold(
         body: ListView(
@@ -63,10 +37,19 @@ class Register extends StatelessWidget {
                     chooseItem(),
                     const Divider(thickness: 1),
                     itemFields(),
-                    //higieneFields(),
-                    //cozinhaFields(),
-                    //vestuarioFields(),
-                    submitButton(note, context, state),
+                    BlocBuilder<RadioBloc, int>(builder: (context, state) {
+                      if(state == 0) {
+                        return higieneFields();
+                      }
+                      else if(state == 1) {
+                        return cozinhaFields();
+                      }
+                      else if(state == 2) {
+                        return vestuarioFields();
+                      }
+                      return Container();
+                    }),
+                    submitButton(item, context, state),
                   ],
                 ),
               ),
@@ -88,60 +71,55 @@ class Register extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        /*Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Row(
+        BlocBuilder<RadioBloc, int>(
+          builder: (context, state) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                // Higiene Radio
-                Radio(
-                  value: 0,
-                  groupValue: _myRadio,
-                  onChanged: (int? a) {
-                    setState(() { 
-                      _myRadio = a ?? 0;
-                      showPainelHigiene();
-                    });
-                  },
+                Row(
+                  children: <Widget>[
+                    // Higiene Radio
+                    Radio(
+                      value: 0,
+                      groupValue: state,
+                      onChanged: (int? inValue) {
+                        BlocProvider.of<RadioBloc>(context).add(inValue!);
+                      },
+                    ),
+                    const Text("Higiene"),
+                  ],
                 ),
-                const Text("Higiene"),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                // Cozinha Radio
-                Radio(
-                  value: 1,
-                  groupValue: _myRadio,
-                  onChanged: (int? a) {
-                    setState(() {
-                      _myRadio = a ?? 0;
-                      showPainelCozinha();
-                    });
-                  },
+                Row(
+                  children: <Widget>[
+                    // Cozinha Radio
+                    Radio(
+                      value: 1,
+                      groupValue: state,
+                      onChanged: (int? inValue) {
+                        BlocProvider.of<RadioBloc>(context).add(inValue!);
+                      },
+                    ),
+                    const Text("Cozinha"),
+                  ],
                 ),
-                const Text("Cozinha"),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                // Vestuário Radio
-                Radio(
-                  value: 2,
-                  groupValue: _myRadio,
-                  onChanged: (int? a) {
-                    setState(() {
-                      _myRadio = a ?? 0;
-                      showPainelVestuario();
-                    });
-                  },
+                Row(
+                  children: <Widget>[
+                    // Vestuário Radio
+                    Radio(
+                      value: 2,
+                      groupValue: state,
+                      onChanged: (int? inValue) {
+                        BlocProvider.of<RadioBloc>(context).add(inValue!);
+                      },
+                    ),
+                    const Text("Vestuário"),
+                  ],
                 ),
-                const Text("Vestuário"),
               ],
-            ),
-          ],
-        ),*/
+            );
+          },
+        ),
       ]
     );
   }
@@ -167,7 +145,9 @@ class Register extends StatelessWidget {
             }
           },
           onSaved: (value) {
-            item.descricao = value!;
+            higiene.descricao = value!;
+            cozinha.descricao = value;
+            vestuario.descricao = value;
           },
         ),
         TextFormField(
@@ -188,7 +168,9 @@ class Register extends StatelessWidget {
             }
           },
           onSaved: (value) {
-            item.marca = value!;
+            higiene.marca = value!;
+            cozinha.marca = value;
+            vestuario.marca = value;
           },
         ),
         TextFormField(
@@ -209,7 +191,9 @@ class Register extends StatelessWidget {
             }
           },
           onSaved: (value) {
-            item.origem = value!;
+            higiene.origem = value!;
+            cozinha.origem = value;
+            vestuario.origem = value;
           },
         ),
         TextFormField(
@@ -231,7 +215,9 @@ class Register extends StatelessWidget {
             }
           },
           onSaved: (value) {
-            item.preco = double.parse(value!);
+            higiene.preco = double.parse(value!);
+            cozinha.preco = double.parse(value);
+            vestuario.preco = double.parse(value);
           },
         ),
         TextFormField(
@@ -252,7 +238,9 @@ class Register extends StatelessWidget {
             }
           },
           onSaved: (value) {
-            item.unidade = value!;
+            higiene.unidade = value!;
+            cozinha.unidade = value;
+            vestuario.unidade = value;
           },
         ),
         /*Row(
@@ -310,7 +298,9 @@ class Register extends StatelessWidget {
             }
           },
           onSaved: (value) {
-            item.quantidade = int.parse(value!);
+            higiene.quantidade = int.parse(value!);
+            cozinha.quantidade = int.parse(value);
+            vestuario.quantidade = int.parse(value);
           },
         ),
         TextFormField(
@@ -332,37 +322,38 @@ class Register extends StatelessWidget {
             }
           },
           onSaved: (value) {
-            item.minQuantidade = int.parse(value!);
+            higiene.minQuantidade = int.parse(value!);
+            cozinha.minQuantidade = int.parse(value);
+            vestuario.minQuantidade = int.parse(value);
           },
         ),
       ],
     );
   }
 
-  /*Widget higieneFields() {
+  Widget higieneFields() {
     return Column(
       children: <Widget>[
-        Visibility(
-          visible: painelHigiene,
-          child: TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.outlined_flag),
-              hintText: "Rosto",
-              labelText: "Função",
-            ),
-            onSaved: (String? value) {},
-            validator: (String? value) {
-              if (value != null) {
-                if (value.isEmpty) {
-                  return "Preencha a função do item de higiene";
-                } else {
-                  return null;
-                }
-              } else {
-                return "Algo errado ocorreu";
-              }
-            },
+        TextFormField(
+          decoration: const InputDecoration(
+            icon: Icon(Icons.outlined_flag),
+            hintText: "Rosto",
+            labelText: "Função",
           ),
+          validator: (String? value) {
+            if (value != null) {
+              if (value.isEmpty) {
+                return "Preencha a função do item de higiene";
+              } else {
+                return null;
+              }
+            } else {
+              return "Algo errado ocorreu";
+            }
+          },
+          onSaved: (value) {
+            higiene.funcao = value!;
+          },
         ),
       ],
     );
@@ -371,57 +362,84 @@ class Register extends StatelessWidget {
   Widget cozinhaFields() {
     return Column(
       children: <Widget>[
-        Visibility(
-          visible: painelCozinha,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                showCursor: true,
-                readOnly: true,
-                onTap: (){
-                  showDatePicker(
-                    context: context,
-                    initialDate: _dataVencimento == null ? DateTime.now() : _dataVencimento,
-                    firstDate: DateTime(2001),
-                    lastDate: DateTime(2050)
-                  ).then((date) {
-                    setState(() {
-                      _dataVencimento = date!;
+        Column(
+          children: <Widget>[
+            TextFormField(
+              decoration: const InputDecoration(
+                icon: Icon(Icons.category),
+                hintText: "Comida",
+                labelText: "Categoria",
+              ),
+              validator: (String? value) {
+                if (value != null) {
+                  if (value.isEmpty) {
+                    return "Preencha a categoria do item de cozinha";
+                  } else {
+                    return null;
+                  }
+                } else {
+                  return "Algo errado ocorreu";
+                }
+              },
+              onSaved: (value) {
+                cozinha.categoria = value!;
+              },
+            ),
+            BlocBuilder<DateBloc, DateTime>(
+              builder: (context, state) {
+                return TextFormField(
+                  showCursor: true,
+                  readOnly: true,
+                  onTap: (){
+                    showDatePicker(
+                      context: context,
+                      initialDate: state,
+                      firstDate: DateTime(2001),
+                      lastDate: DateTime(2050)
+                    ).then((date) {
+                      BlocProvider.of<DateBloc>(context).add(date!);
                     });
-                  });
-                },
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.date_range),
-                  hintText: _dataVencimento == null ? 'Nothing has been picked yet' : _dataVencimento.toString(),
-                  labelText: "Data de Vencimento",
-                ),
-                onSaved: (String? value) {},
-                validator: (String? value) {},
-              ),
-              SizedBox(
-                height: 64,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: Checkbox(
-                        value: _checkboxCozinha,
-                        onChanged: (bool? newValue) {
-                          setState(() => _checkboxCozinha = newValue ?? false);
-                        },
-                      ),
+                  },
+                  decoration: InputDecoration(
+                    icon: const Icon(Icons.date_range),
+                    hintText: state.toString(),
+                    labelText: "Data de Vencimento",
+                  ),
+                  validator: (String? value) {},
+                  onSaved: (value) {
+                    cozinha.vencimento = state;
+                  },
+                );
+              }
+            ),
+            SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: BlocBuilder<CheckBoxBloc, bool>(
+                      builder: (context, state) {
+                        return Checkbox(
+                          value: state,
+                          onChanged: (bool? newValue) {
+                            BlocProvider.of<CheckBoxBloc>(context).add(newValue!);
+                            cozinha.precisaRefrigeracao = newValue;
+                          },
+                        );
+                      },
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 18),
-                      child: const Text("Precisa de refrigeração"),
-                    ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 18),
+                    child: const Text("Precisa de refrigeração"),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -430,78 +448,84 @@ class Register extends StatelessWidget {
   Widget vestuarioFields() {
     return Column(
       children: <Widget>[
-        Visibility(
-          visible: painelVestuario,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.turned_in),
-                  hintText: "Lã",
-                  labelText: "Tecido",
-                ),
-                onSaved: (String? value) {},
-                validator: (String? value) {
-                  if (value != null) {
-                    if (value.isEmpty) {
-                      return "Preencha a tipo de tecido";
-                    } else {
-                      return null;
-                    }
+        Column(
+          children: <Widget>[
+            TextFormField(
+              decoration: const InputDecoration(
+                icon: Icon(Icons.turned_in),
+                hintText: "Lã",
+                labelText: "Tecido",
+              ),
+              validator: (String? value) {
+                if (value != null) {
+                  if (value.isEmpty) {
+                    return "Preencha a tipo de tecido";
                   } else {
-                    return "Algo errado ocorreu";
+                    return null;
                   }
-                },
+                } else {
+                  return "Algo errado ocorreu";
+                }
+              },
+              onSaved: (value) {
+                vestuario.tecido = value!;
+              },
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                icon: Icon(Icons.color_lens),
+                hintText: "Branco",
+                labelText: "Cor da roupa",
               ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.color_lens),
-                  hintText: "Branco",
-                  labelText: "Cor da roupa",
-                ),
-                onSaved: (String? value) {},
-                validator: (String? value) {
-                  if (value != null) {
-                    if (value.isEmpty) {
-                      return "Preencha a cor da roupa";
-                    } else {
-                      return null;
-                    }
+              validator: (String? value) {
+                if (value != null) {
+                  if (value.isEmpty) {
+                    return "Preencha a cor da roupa";
                   } else {
-                    return "Algo errado ocorreu";
+                    return null;
                   }
-                },
-              ),
-              SizedBox(
-                height: 64,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: Checkbox(
-                        value: _checkboxVestuario,
-                        onChanged: (bool? newValue) {
-                          setState(() => _checkboxVestuario = newValue ?? false);
-                        },
-                      ),
+                } else {
+                  return "Algo errado ocorreu";
+                }
+              },
+              onSaved: (value) {
+                vestuario.cor = value!;
+              },
+            ),
+            SizedBox(
+              height: 64,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: BlocBuilder<CheckBoxBloc, bool>(
+                      builder: (context, state) {
+                        return Checkbox(
+                          value: state,
+                          onChanged: (bool? newValue) {
+                            BlocProvider.of<CheckBoxBloc>(context).add(newValue!);
+                            vestuario.importado = newValue;
+                          },
+                        );
+                      },
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 18),
-                      child: const Text("Importado"),
-                    ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 18),
+                    child: const Text("Importado"),
+                  ),
+                ],
               ),
-            ]
-          ),
+            ),
+          ]
         ),
       ]
     );
-  }*/
+  }
 
-  Widget submitButton(Item note, BuildContext context, ManageState state) {
+  Widget submitButton(Item item, BuildContext context, ManageState state) {
     return SizedBox(
       height: 80,
       width: 220,
@@ -532,7 +556,15 @@ class Register extends StatelessWidget {
           onPressed: () {
             if (formKey.currentState!.validate()) {
               formKey.currentState!.save();
-              BlocProvider.of<ManageBloc>(context).add(SubmitEvent(note: item));
+              if(higiene.funcao.isNotEmpty) {
+                BlocProvider.of<ManageBloc>(context).add(SubmitEvent(item: higiene));
+              }
+              else if(cozinha.categoria.isNotEmpty) {
+                BlocProvider.of<ManageBloc>(context).add(SubmitEvent(item: cozinha));
+              }
+              else if(vestuario.tecido.isNotEmpty) {
+                BlocProvider.of<ManageBloc>(context).add(SubmitEvent(item: vestuario));
+              }
               formKey.currentState!.reset();
 
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(

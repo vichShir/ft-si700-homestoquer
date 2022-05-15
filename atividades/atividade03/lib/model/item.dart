@@ -1,4 +1,6 @@
-class Item {
+import 'package:intl/intl.dart';
+
+abstract class Item {
   String _descricao = "";
   String _marca = "";
   String _origem = "";
@@ -118,6 +120,14 @@ class Higiene extends Item {
     _funcao = map["funcao"];
   }
 
+  String get funcao => _funcao;
+
+  set funcao(String newFuncao) {
+    if (newFuncao.isNotEmpty) {
+      _funcao = newFuncao;
+    }
+  }
+
   @override
   toMap() {
     var map = Map<String, dynamic>();
@@ -154,6 +164,26 @@ class Vestuario extends Item {
     _importado = map["importado"];
   }
 
+  String get tecido => _tecido;
+  String get cor => _cor;
+  bool get importado => _importado;
+
+  set tecido(String newTecido) {
+    if (newTecido.isNotEmpty) {
+      _tecido = newTecido;
+    }
+  }
+
+  set cor(String newCor) {
+    if (newCor.isNotEmpty) {
+      _cor = newCor;
+    }
+  }
+
+  set importado(bool newImportado) {
+    _importado = newImportado;
+  }
+
   @override
   toMap() {
     var map = Map<String, dynamic>();
@@ -173,6 +203,7 @@ class Vestuario extends Item {
 
 class Cozinha extends Item {
   // Atributos
+  String _categoria = "";
   DateTime _vencimento = DateTime.now().add(const Duration(days: 7));
   bool _precisaRefrigeracao = false;
 
@@ -186,13 +217,35 @@ class Cozinha extends Item {
     _unidade = map["unidade"];
     _quantidade = map["quantidade"];
     _minQuantidade = map["minQuantidade"];
-    _vencimento = map["vencimento"];
+    _categoria = map["categoria"];
+    _vencimento = DateTime.parse(map["vencimento"]);
     _precisaRefrigeracao = map["precisaRefrigeracao"];
+  }
+
+  String get categoria => _categoria;
+  DateTime get vencimento => _vencimento;
+  bool get precisaRefrigeracao => _precisaRefrigeracao;
+
+  set categoria(String newCategoria) {
+    if (newCategoria.isNotEmpty) {
+      _categoria = newCategoria;
+    }
+  }
+
+  set vencimento(DateTime newVencimento) {
+    _vencimento = newVencimento;
+  }
+
+  set precisaRefrigeracao(bool newRefrigeracao) {
+    _precisaRefrigeracao = newRefrigeracao;
   }
 
   @override
   toMap() {
     var map = Map<String, dynamic>();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String formatted = formatter.format(_vencimento);
+
     map["descricao"] = _descricao;
     map["marca"] = _marca;
     map["origem"] = _origem;
@@ -200,7 +253,8 @@ class Cozinha extends Item {
     map["unidade"] = _unidade;
     map["quantidade"] = _quantidade;
     map["minQuantidade"] = _minQuantidade;
-    map['vencimento'] = _vencimento;
+    map['categoria'] = _categoria;
+    map['vencimento'] = formatted;
     map['precisaRefrigeracao'] = _precisaRefrigeracao;
     return map;
   }
