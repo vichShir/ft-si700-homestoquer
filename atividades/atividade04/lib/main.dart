@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:si700_estoque/view/first_screen.dart';
 import 'package:si700_estoque/view/second_screen.dart';
@@ -9,10 +10,15 @@ import 'bloc/manage_bloc.dart';
 import 'bloc/monitor_bloc.dart';
 import 'bloc/form_bloc.dart';
 
+import 'bloc/auth_bloc.dart';
+import 'view/wrapper.dart';
+
 /// Nome: Victor Yukio Shirasuna
 /// RA: 245155
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -27,7 +33,11 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Raleway',
         primarySwatch: Colors.green,
       ),
-      home: const MyHomePage(),
+      //home: const MyHomePage(),
+      home: MultiBlocProvider(
+        providers: [BlocProvider(create: (context) => AuthBloc())],
+        child: const Wrapper(),
+      )
     );
   }
 }
