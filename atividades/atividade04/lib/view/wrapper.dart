@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/auth_event.dart';
 import 'login_screen.dart';
 
 import '../bloc/auth_bloc.dart';
@@ -38,27 +37,46 @@ class WrapperState extends State<Wrapper> {
         if (state is Authenticated) {
           return const MainApp();
         } else {
-          return //LoginScreen();
-
-              DefaultTabController(
-                  length: 2,
-                  child: Scaffold(
-                    body: const TabBarView(
-                      children: [
-                        RegisterScreen(),
-                        LoginScreen()
-                      ],
-                    ),
-                    appBar: AppBar(
-                      title: const Text("Autenticação Necessária"),
-                      bottom: const TabBar(
-                        tabs: [
-                          Tab(text: "Novo Cadastro"),
-                          Tab(text: "Efetuar Login")
-                        ],
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Column(children: <Widget>[
+                const SizedBox(height: 200,),
+                const Center(
+                  child: Text("Login", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold))
+                ),
+                const LoginScreen(),
+                Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                        minimumSize: MaterialStateProperty.all(const Size(220, 50)),
+                        backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                        elevation: MaterialStateProperty.all(3),
+                        shadowColor: MaterialStateProperty.all(Colors.transparent),
                       ),
+                      child: const Text('Ainda não tem uma conta? Registre-se', 
+                        style: TextStyle(
+                          color: Colors.black, 
+                          fontSize: 16,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => RegisterScreen(cont: context,)),
+                        );
+                      },
                     ),
-                  ));
+                  ),
+                ),
+              ]
+            ),
+          );
         }
       },
     );
