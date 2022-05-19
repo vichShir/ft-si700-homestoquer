@@ -36,16 +36,7 @@ class WrapperState extends State<Wrapper> {
       },
       builder: (context, state) {
         if (state is Authenticated) {
-          return Scaffold(
-              appBar: AppBar(
-                title: const Text("Autenticado"),
-              ),
-              floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    BlocProvider.of<AuthBloc>(context).add(Logout());
-                  },
-                  child: const Icon(Icons.logout)),
-              body: const MainApp());
+          return const MainApp();
         } else {
           return //LoginScreen();
 
