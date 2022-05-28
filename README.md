@@ -12,6 +12,7 @@ O objetivo deste repositório é manter as **atividades** realizadas na discipli
   - Atividade 01 - Linguagem Dart
   - Atividade 02 - Widgets no Flutter
   - Atividade 03 - BLOC inserindo dados no Firebase
+  - Atividade 04 - Autenticação com Firebase
 - **Trabalho (Homestoquer)**
   - Parte 1 - Interface Gráfica
 
