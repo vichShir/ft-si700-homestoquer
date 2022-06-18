@@ -13,6 +13,7 @@ O objetivo deste repositório é manter as **atividades** realizadas na discipli
   - Atividade 02 - Widgets no Flutter
   - Atividade 03 - BLOC inserindo dados no Firebase
   - Atividade 04 - Autenticação com Firebase
+  - Atividade 05 - Firebase Firestore
 - **Trabalho (Homestoquer)**
   - Parte 1 - Interface Gráfica
 
