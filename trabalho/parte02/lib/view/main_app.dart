@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:si700_estoque/view/first_screen.dart';
-import 'package:si700_estoque/view/second_screen.dart';
-import 'package:si700_estoque/view/third_screen.dart';
+import 'package:si700_estoque/screens/home_screen.dart';
+import 'package:si700_estoque/screens/itens_screen.dart';
+import 'package:si700_estoque/screens/regitem_screen.dart';
 
 import '../bloc/auth_event.dart';
 import '../bloc/manage_bloc.dart';

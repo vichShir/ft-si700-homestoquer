@@ -91,7 +91,7 @@ class Item {
   }
 
   toMap() {
-    var map = Map<String, dynamic>();
+    var map = <String, dynamic>{};
     map["descricao"] = _descricao;
     map["marca"] = _marca;
     map["origem"] = _origem;
@@ -130,7 +130,7 @@ class Higiene extends Item {
 
   @override
   toMap() {
-    var map = Map<String, dynamic>();
+    var map = <String, dynamic>{};
     map["descricao"] = _descricao;
     map["marca"] = _marca;
     map["origem"] = _origem;
@@ -186,7 +186,7 @@ class Vestuario extends Item {
 
   @override
   toMap() {
-    var map = Map<String, dynamic>();
+    var map = <String, dynamic>{};
     map["descricao"] = _descricao;
     map["marca"] = _marca;
     map["origem"] = _origem;
@@ -204,7 +204,7 @@ class Vestuario extends Item {
 class Cozinha extends Item {
   // Atributos
   String _categoria = "";
-  DateTime _vencimento = DateTime.now().add(const Duration(days: 7));
+  DateTime _vencimento = DateTime.now();
   bool _precisaRefrigeracao = false;
 
   Cozinha() : super();
@@ -242,7 +242,7 @@ class Cozinha extends Item {
 
   @override
   toMap() {
-    var map = Map<String, dynamic>();
+    var map = <String, dynamic>{};
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String formatted = formatter.format(_vencimento);
 

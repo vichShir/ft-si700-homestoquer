@@ -24,13 +24,14 @@ class WrapperState extends State<Wrapper> {
       listener: (context, state) {
         if (state is AuthError) {
           showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text("Erro do Firebase"),
-                  content: Text(state.message),
-                );
-              });
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Erro do Firebase"),
+                content: Text(state.message),
+              );
+            }
+          );
         }
       },
       builder: (context, state) {
@@ -39,7 +40,8 @@ class WrapperState extends State<Wrapper> {
         } else {
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            body: Column(children: <Widget>[
+            body: Column(
+              children: <Widget>[
                 const SizedBox(height: 200,),
                 const Center(
                   child: Text("Login", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold))

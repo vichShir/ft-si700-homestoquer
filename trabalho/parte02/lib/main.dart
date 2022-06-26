@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Raleway',
         primarySwatch: Colors.green,
       ),
-      //home: const MyHomePage(),
       home: MultiBlocProvider(
         providers: [BlocProvider(create: (context) => AuthBloc())],
         child: const Wrapper(),

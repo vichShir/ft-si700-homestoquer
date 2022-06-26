@@ -1,5 +1,4 @@
 import 'package:si700_estoque/bloc/manage_event.dart';
-import 'package:si700_estoque/model/item.dart';
 import 'package:si700_estoque/provider/firebase_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
