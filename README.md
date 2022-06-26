@@ -16,6 +16,7 @@ O objetivo deste repositório é manter as **atividades** realizadas na discipli
   - Atividade 05 - Firebase Firestore
 - **Trabalho (Homestoquer)**
   - Parte 1 - Interface Gráfica
+  - Parte 2 - Final
 
 ### 🌐 Motivação
 
